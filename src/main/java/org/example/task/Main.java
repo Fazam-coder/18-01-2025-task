@@ -23,14 +23,22 @@ public class Main {
         while (role == null) {
             Scanner scanner = new Scanner(System.in);
             String login = scanner.next();
+            if (login.equals("exit")) {
+                System.out.println("Конец программы");
+                break;
+            }
             String password = scanner.next();
+            if (password.equals("exit")) {
+                System.out.println("Конец программы");
+                break;
+            }
             role = userCheck(login, password);
         }
         if (role == ADMIN) {
             System.out.println("1. File");
             System.out.println("2. Create new user");
             System.out.println("3. exit");
-        } else {
+        } else if (role == USER) {
             System.out.println("1. File");
             System.out.println("2. Get play list");
             System.out.println("3. exit");
@@ -38,16 +46,12 @@ public class Main {
 
     }
     public static Role userCheck(String login, String password) {
-        boolean error = true;
-        while (error) {
-            try {
-                LoginSource.check(login);
-                PasswordSource.check(password);
-                error = false;
-            } catch (WrongLoginException | WrongPasswordException e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
+        try {
+            LoginSource.check(login);
+            PasswordSource.check(password);
+        } catch (WrongLoginException | WrongPasswordException e) {
+            System.out.println(e.getMessage());
+            return null;
         }
         if (admin.getLogin().equals(login) && admin.getPassword().equals(password)) {
             return admin.getRole();
